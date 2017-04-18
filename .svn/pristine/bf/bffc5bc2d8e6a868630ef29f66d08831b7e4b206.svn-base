@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+
+    </style>
+
+    <!--<script>-->
+    <!--window.onerror = function (message, url, lineNo, colNo, error) {-->
+    <!--var userAgent = navigator.userAgent;-->
+    <!--var content = message + '<&#45;&#45;&ndash;&gt;' + error.stack.toString();-->
+    <!--//alert(message);-->
+    <!--alert(message + '<&#45;&#45;error&ndash;&gt;' + content.toString());-->
+    <!--};-->
+    <!--</script>-->
+</head>
+<body>
+<div id="wrap">
+    <!--<header class="aui-bar aui-bar-nav" style="padding-top:25px;">-->
+    <!--<a class="aui-pull-left" onclick="back();">-->
+    <!--<span class="aui-iconfont aui-icon-left"></span>-->
+    <!--</a>-->
+    <!--<div id="title" class="aui-title"></div>-->
+    <!--</header>-->
+
+    <header id="header" class="aui-bar aui-bar-nav" style="background: #d41116;">
+        <a class="aui-pull-left aui-btn" onclick="back();">
+            <span class="aui-iconfont aui-icon-left"></span>返回
+        </a>
+        <div id="title" class="aui-title"></div>
+    </header>
+</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/util.js"></script>
+<script type="text/javascript">
+	function back() {
+		api.historyBack({
+			frameName: 'baidu'
+		}, function (ret, err) {
+			if (!ret.status) {
+				api.closeWin();
+			}
+		});
+	}
+
+//	function getTitle() {
+//		var script = "api.sendEvent({name: 'getTitle', extra: {title: window.document.title}});";
+//
+//        api.execScript({
+//            frameName: 'externalPage',
+//            script: script
+//        });
+//	}
+
+	apiready = function () {
+
+		if (api.connectionType == 'none') {
+			Util.uiShowToast({title: '连接失败，请检查您的网络'});
+			return;
+		}
+
+
+		var header = document.querySelector('#header');
+		$api.fixIos7Bar(header);
+
+//		api.addEventListener({
+//			name: 'pageTitle'
+//		}, function (ret, err) {
+//			$api.text(document.getElementById('title'), ret.value.name);
+//		});
+//
+//		api.addEventListener({
+//			name: 'getTitle'
+//		}, function (ret, err) {
+//			console.log($api.jsonToStr(ret));
+//			if (ret && ret.value) {
+//				$api.text(document.getElementById('title'), ret.value.title);
+//			}
+//		});
+
+		api.addEventListener({
+			name: 'keyback'
+		}, function (ret, err) {
+			back();
+		});
+
+//		var browser = api.require('webBrowser');
+//		browser.open({
+//			url: api.pageParam.url
+//		});
+//
+//		return;
+
+		api.openFrame({
+			name: 'externalPage',
+			url: api.pageParam.url,
+			bounces: false,
+			rect: {
+				x: 0,
+				y: $api.dom('header').offsetHeight,
+				//y: 70,
+				w: 'auto',
+				h: 'auto'
+			},
+			progress: {
+				type: 'page'
+            }
+		});
+
+
+		api.setFrameClient({
+			frameName: 'externalPage'
+        }, function (ret, err) {
+			switch (ret.state) {
+				case 0:
+					break;
+				case 1:
+					break;
+				case 2:
+					break;
+				case 3:
+					$api.text(document.getElementById('title'), ret.title);
+					//console.log(ret.title);
+					break;
+				case 4:
+					break;
+				default:
+					break;
+			}
+        });
+	};
+</script>

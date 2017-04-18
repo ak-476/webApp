@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <!--<header class="aui-bar aui-bar-nav" style="padding-top:25px;">-->
+        <!--<a class="aui-pull-left" onclick="back();">-->
+            <!--<span class="aui-iconfont aui-icon-left"></span>-->
+        <!--</a>-->
+        <!--<div id="title" class="aui-title"></div>-->
+    <!--</header>-->
+
+    <header class="aui-bar aui-bar-nav">
+        <a class="aui-pull-left aui-btn" onclick="back();">
+            <span class="aui-iconfont aui-icon-left"></span>返回
+        </a>
+        <div id="title" class="aui-title"></div>
+    </header>
+</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript">
+	function back() {
+		api.historyBack({
+			frameName: 'baidu'
+		}, function (ret, err) {
+			if (!ret.status) {
+				api.closeWin();
+			}
+		});
+	}
+
+//	var getWebUrl = api.require('getWebUrl');
+//	getWebUrl.addListener(function(ret, err) {
+//		if (ret.url) {
+//			alert(ret.url);
+//			alert(ret.title);
+//		} else {
+//			alert(err.code);
+//		}
+//	});
+
+	apiready = function () {
+
+		api.addEventListener({
+			name: 'pageTitle'
+		}, function(ret, err) {
+			alert('pageTile' + window.document.title);
+			$api.text(document.getElementById('title'), window.document.title || ret.value.name);
+		});
+
+		api.addEventListener({
+			name: 'needLogin'
+		}, function(ret, err) {
+            if (ret.value.name) {
+				console.log('needLogin');
+				setTimeout(function () {
+					api.closeWin({
+						name: 'externalPage'
+					});
+                }, 1000);
+            }
+		});
+
+		api.openFrame({
+			name: 'baidu',
+			url: api.pageParam.url,
+			bounces: false,
+			rect: {
+				x: 0,
+//			    y: headerPos.h,
+				y: 70,
+				w: 'auto',
+				h: 'auto'
+			}
+		});
+	};
+</script>

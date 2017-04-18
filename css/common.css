@@ -1,0 +1,42 @@
+html,body{
+    height: 100%;
+    background-color: #EEEEF0;
+}
+
+#header.home .home{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    background: url(../res/img/tm_1111_hoepage_actionbar_bg.jpg) center bottom no-repeat;
+    background-size: 100% 100%;
+}
+
+#header.home .search_box{
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    background: url(../res/img/tmall_search_result_input.9.png) center center no-repeat;
+    background-size: 100% 39px;
+    height: 100%;
+}
+#header.home .search_box .home_icon_search{
+    float: right;
+    height: 100%;
+    width: 37px;
+    background: url(../res/img/tmall_icon_search.png) center center no-repeat;
+    background-size: 18px 18px;
+}
+#header.home .search_box .text{
+    height: 48px;
+    line-height: 48px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: inline-block;
+    color: #7B7B7B;
+}
+
+#header.home .search_box {
+    position: relative;
+}
+    /*home end*/

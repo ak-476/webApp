@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="../css/aui.css"/>-->
+    <style>
+        .swipe {
+            overflow: hidden;
+            visibility: hidden;
+            position: relative;
+            background: #fff;
+            padding-bottom: 10px;
+        }
+
+        .swipe-wrap {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .swipe-wrap .swipe-box {
+            float: left;
+            width: 100%;
+            position: relative;
+        }
+
+        .sliderow {
+            text-align: center;
+            width: 100%;
+            display: block;
+        }
+
+        /*.slidepanel .sliderow {margin-top: 10px;}*/
+        .sliderow .slidecol {
+            float: left;
+            width: 25%;
+        }
+
+        .sliderow .slidecol img {
+            width: 60%;
+            margin-top: 10px;
+        }
+
+        .sliderow .slidecol div {
+            font-size: 13px;
+            margin-top: 5px;
+        }
+    </style>
+
+    <script>
+	    window.onerror = function (message, url, lineNo, colNo, error) {
+		    var userAgent = navigator.userAgent;
+		    var content = message + '<---->' + error.stack.toString();
+		    //alert(message);
+		    alert(message + '<--error-->' + content.toString());
+	    };
+    </script>
+</head>
+<body onscroll="funIsBottom()">
+<!--<body>-->
+<div id='slider' class='swipe'>
+    <div class='swipe-wrap'>
+        <div class="swipe-box">
+            <div class="sliderow">
+                <div class="slidecol" tapmode="" onclick="toUrl('article-frm')">
+                    <img src="../image/firstpage/food_u.png" alt="">
+                    <div class="">
+                        访问外部页面
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="toPay('food')">
+                    <img src="../image/firstpage/snack_u.png" alt="">
+                    <div class="">
+                        微信支付
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="notice('food')">
+                    <img src="../image/firstpage/bar_o.png" alt="">
+                    <div class="">
+                        通知
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="backApp()">
+                    <img src="../image/firstpage/more_u.png" alt="">
+                    <div class="">
+                        犇犇课堂
+                    </div>
+                </div>
+            </div>
+            <div class="sliderow">
+                <div class="slidecol" tapmode="" onclick="toLogin('tuan')">
+                    <img src="../image/firstpage/groupon_u.png" alt="">
+                    <div class="">
+                        登录
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('orderhotel')">
+                    <img src="../image/firstpage/hotel_u.png" alt="">
+                    <div class="">
+                        测试数据
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('waimai')">
+                    <img src="../image/firstpage/takeaway_u.png" alt="">
+                    <div class="">
+                        资料大全
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('movies')">
+                    <img src="../image/firstpage/film_u.png" alt="">
+                    <div class="">
+                        万能搜搜
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="swipe-box">
+            <div class="sliderow">
+                <div class="slidecol" tapmode="" onclick="openNewWindow('girls')">
+                    <img src="../image/firstpage/liren.png" alt="">
+                    <div class="">
+                        丽人
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('kids')">
+                    <img src="../image/firstpage/qinzi.png" alt="">
+                    <div class="">
+                        亲子
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('marriage')">
+                    <img src="../image/firstpage/jiehun.png" alt="">
+                    <div class="">
+                        结婚
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('decorate')">
+                    <img src="../image/firstpage/jiazhuang.png" alt="">
+                    <div class="">
+                        家装
+                    </div>
+                </div>
+            </div>
+            <div class="sliderow">
+                <div class="slidecol" tapmode="" onclick="openNewWindow('reserve')">
+                    <img src="../image/firstpage/dingzuo.png" alt="">
+                    <div class="">
+                        订座
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openAllinone(1)">
+                    <img src="../image/firstpage/zhaoyouhui.png" alt="">
+                    <div class="">
+                        找优惠
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openNewWindow('seekrank')">
+                    <img src="../image/firstpage/bangdan.png" alt="">
+                    <div class="">
+                        看榜单
+                    </div>
+                </div>
+                <div class="slidecol" tapmode="" onclick="openLogin()">
+                    <img src="../image/firstpage/dianping.png" alt="">
+                    <div class="">
+                        写点评
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="testDiv"></div>
+
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/swipe.js"></script>
+<script>
+    apiready = function () {
+
+//	    api.showProgress({
+//		    style: 'default',
+//		    animationType: 'fade',
+//		    title: '努力加载中...',
+//		    text: '先喝杯茶...',
+//		    modal: false
+//	    });
+
+//	    api.pageDown(function(ret, err) {
+//		    if (!ret.scrolled) {
+//			    //已经滚动到底部
+//			    $api.byId('testDiv').append('1111');
+//		    }
+//	    });
+
+    };
+
+    function toLogin() {
+	    api.openWin({
+		    name: 'login',
+		    url: './win_login.html',
+		    bounces: false
+	    });
+    }
+
+    function backApp() {
+	    api.openWin({
+		    name:  'externalPage',
+		    url: './common/header.html',
+		    pageParam:{
+			    file : 'article',
+			    id : 1,
+			    title : '你好',
+                url: 'http://192.168.11.58:8080'
+		    }
+	    })
+    }
+
+    function toUrl() {
+	    api.openWin({
+		    name:  'externalPage',
+		    url: './common/header.html',
+		    pageParam:{
+			    file : 'article',
+			    id : 1,
+			    title : '你好',
+                url: 'http://192.168.11.58:9999/v2/quickPage'
+		    }
+	    });
+
+//	    api.openFrame({
+//		    name: 'baidu',
+//		    url: 'http://www.baidu.com',
+//		    bounces: false,
+//		    rect: {
+//			    x: 0,
+////			    y: headerPos.h,
+//			    y: 70,
+//			    w: 'auto',
+//			    h: 'auto'
+//		    }
+//	    });
+    }
+
+    function toPay() {
+    	console.log('toPay');
+	    var wxPay = api.require('wxPay');
+	    wxPay.getOrderId({
+		    info: ''
+	    }, function(ret, err) {});
+    }
+
+    function notice() {
+    	alert(123);
+	    api.notification({
+		    notify: {
+			    content: '闹钟'
+		    },
+		    alarm: {
+			    hour: 14,
+			    minutes: 24,
+			    daysOfWeek: [2, 3, 4, 5, 6]
+		    }
+	    }, function(ret, err) {
+		    var id = ret.id;
+	    });
+    }
+
+    function funIsBottom() {
+    	//alert('触底加载 ');
+    	$api.byId('testDiv').append('1111');
+    }
+
+
+	window.onload = function() {
+		// var mySwiper = new Swiper('.swiper-container',{
+		// 	mode:'horizontal',
+		// 	loop: true,
+		// 	speed:750,
+		// 	pagination: '.pagination'
+		// });
+
+		// mySwiper.startAutoplay();
+
+
+		var slider =
+			Swipe(document.getElementById('slider'), {
+				auto: 1000000,
+				continuous: true,
+				callback: function(pos) {
+				}
+			});
+	}
+</script>
+</body>
+</html>

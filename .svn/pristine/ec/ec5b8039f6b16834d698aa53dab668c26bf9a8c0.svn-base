@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.ttf"/>
+    <link rel="stylesheet" href="../css/crsCss.css">
+    <!--<link rel="stylesheet" type="text/css" href="../css/aui.css"/>-->
+
+    <script>
+		window.onerror = function (message, url, lineNo, colNo, error) {
+			var userAgent = navigator.userAgent;
+			var content = message + '<---->' + error.stack.toString();
+			//alert(message);
+			alert(message + '<--error-->' + content.toString());
+		};
+    </script>
+</head>
+<body>
+<!--<body>-->
+<div id="testDiv" onscroll="funIsBottom()">
+    <div class="h10"></div>
+    <div class="index_table">
+        <div>
+            <ul>
+                <li v-for="(v,index) in quickList" tapmode v-if="index <= 7" @click="toUrl(v.url)">
+                    <p>
+                        <img :src="v.imgPath" alt="">
+                    </p>
+                    <span class=".font2">{{v.name}}</span>
+                </li>
+
+            </ul>
+            <ul class="tableListMore">
+                <li v-for="(v,index) in quickList" tapmode="" v-if="index>7" @click="toUrl(v.url)">
+                    <p>
+                        <img :src="v.imgPath" alt="">
+                    </p>
+                    <span class=".font2">{{v.name}}</span>
+                </li>
+
+            </ul>
+        </div>
+        <div class="getMoreTable" tapmode="" @click="moreTableList()" v-if="quickList[8]">
+            <p>{{displayValue}}</p>
+            <img src="../image/arrow.png" alt="" :class="{active: checkedMore}">
+        </div>
+    </div>
+    <div class="h10"></div>
+
+    <div class="articleList" v-for="o in fmsList" @click="articleGo(o.url)">
+        <!-- 共轨之家公众好 -->
+        <div class="gzh" v-if="o.type == 1">
+            <p class="title"> {{o.title}} </p>
+            <p class="time">
+                <span>{{ o.source }}</span>
+                <span>{{o.showTime}}</span>
+            </p>
+            <img :src="o.imgPaths + '?imageView2/1/w/150/h/80'" alt="">
+        </div>
+
+        <!-- 经典问答案例 -->
+        <div class="jdwd" v-if="o.type == 3">
+            <p class="title">{{o.title}}</p>
+            <ul>
+                <li v-for="v in o.imgPathList">
+                    <img :src="v + '?imageView2/1/w/150/h/80'" alt="">
+                </li>
+
+            </ul>
+            <p class="time">
+                <span>{{ o.source }}</span>
+                <span>{{o.showTime}}</span>
+            </p>
+        </div>
+
+        <!-- 电控基础 -->
+
+        <div class="dkjc" v-if="o.type ==2">
+            <p class="title">
+                {{o.title}}
+            </p>
+            <div>
+                <img :src="o.imgPaths + '?imageView2/1/w/150/h/80'" alt="">
+            </div>
+            <p class="time">
+                <span>{{ o.source }}</span>
+                <span>{{o.showTime}}</span>
+            </p>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/vue.min.js"></script>
+<script type="text/javascript" src="../script/swipe.js"></script>
+<script type="text/javascript" src="../script/aui/aui-toast.js"></script>
+<script type="text/javascript" src="../script/aui/aui-scroll.js"></script>
+<script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript" src="../script/util.js"></script>
+
+<script>
+	var vm = new Vue({
+		el: '#testDiv',
+		data: {
+			fmsList: [],
+			quickList: [],
+			list: [],
+			checkedMore: false,
+			display: true,
+			pages: 0,
+			displayValue: '点击显示更多'
+		},
+		methods: {
+			init: function () {
+				var that = this;
+				that.getFmsList();
+				that.getQuickList()
+			},
+			getFmsList: function (showLoading, callback) {
+				var that = this;
+				Util.post(Config.api.appFmsList, {curPage: that.pages}, function (data) {
+					if (!data) {
+						return;
+					}
+					that.pages++;
+					if (data.length == 0) {
+						return;
+					}
+					that.fmsList = that.fmsList.concat(data)
+				}, function () {
+
+				}, showLoading)
+
+			},
+			getQuickList: function () {
+				var that = this;
+				Util.post(Config.api.appHomeClassify, {}, function (data) {
+					that.quickList = data;
+				})
+			},
+			moreTableList: function () {
+				if (!this.checkedMore) {
+					var quickLength = this.quickList.length;
+					$api.byId('listSecond').style.height = Math.ceil((quickLength - 8) / 4) * 72
+						+ 'px';
+					this.displayValue = '收起';
+					this.checkedMore = true;
+
+				} else {
+					$api.byId('listSecond').style.height = '0';
+					this.displayValue = '点击显示更多';
+					this.checkedMore = false;
+				}
+			},
+			toUrl: function (url) {
+				console.log(url);
+
+				api.openWin({
+					name: 'externalPage',
+					url: './common/header.html',
+					pageParam: {
+						file: 'table',
+						id: 1,
+						title: '你好',
+						url: url
+					}
+				})
+			},
+			articleGo: function (url) {
+				console.log(url);
+				if (url.indexOf('http') == -1) {
+					Util.auiShowToast({title: 'URl异常', type: 'fail'});
+					return;
+				}
+				console.log(url);
+
+				api.openWin({
+					name: 'externalPage',
+					url: './common/header.html',
+					pageParam: {
+						file: 'article',
+						id: 2,
+						title: '你好',
+						url: url
+					}
+				})
+			}
+		}
+
+	});
+	var page = 1;
+	var scroll = new auiScroll({
+		listen: true,
+		distance: 2 //判断到达底部的距离，isToBottom为true
+	}, function (ret) {
+		if (ret.isToBottom) {
+			vm.getFmsList(true)
+		}
+	});
+
+	apiready = function () {
+		vm.init();
+
+		Util.uiSetRefreshHeaderInfo(function () {
+			vm.init();
+		});
+	};
+
+	function toLogin() {
+		api.openWin({
+			name: 'login',
+			url: './win_login.html',
+			bounces: false
+		});
+	}
+
+	function backApp() {
+		api.openWin({
+			name: 'externalPage',
+			url: './common/header.html',
+			pageParam: {
+				file: 'article',
+				id: 1,
+				title: '你好',
+				url: 'http://192.168.11.86:81'
+			}
+		})
+	}
+
+
+	function a(a) {
+		var d,
+			e,
+			b = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+			c = "";
+		for (d = 0; a > d; d += 1)
+			e = Math.random() * b.length, e = Math.floor(e), c += b.charAt(e);
+		return c
+	}
+
+	function toPay() {
+		console.log('toPay');
+		var wxPay = api.require('wxPay');
+		wxPay.config({
+			apiKey: 'wx290208622076c4e6',
+			mchId: '1329725301',
+			partnerKey: 'xingzexinxiCommonRail1Q2W3E4R5T6',
+			notifyUrl: 'http://test.51gonggui.com/commonrail/wxpay/notify.htm'
+		}, function (ret, err) {
+			if (ret.status) {
+				wxPay.pay({
+					description: '1',
+					totalFee: '0.01',
+					tradeNo: a(32)
+				}, function (ret, err) {
+					alert(JSON.stringify(ret));
+					if (ret.status) {
+						alert(ret.code);
+					} else {
+						alert(err.code);
+						// alert(err.return_msg);
+					}
+				});
+			} else {
+				alert(err.code);
+			}
+		});
+	}
+
+	function notice() {
+		api.notification({
+			notify: {
+				content: '闹钟'
+			},
+			alarm: {
+				hour: 14,
+				minutes: 24,
+				daysOfWeek: [2, 3, 4, 5, 6]
+			}
+		}, function (ret, err) {
+			var id = ret.id;
+		});
+	}
+
+
+	window.onload = function () {
+		// var mySwiper = new Swiper('.swiper-container',{
+		// 	mode:'horizontal',
+		// 	loop: true,
+		// 	speed:750,
+		// 	pagination: '.pagination'
+		// });
+
+		// mySwiper.startAutoplay();
+
+
+		var slider =
+			Swipe(document.getElementById('slider'), {
+				auto: 1000000,
+				continuous: true,
+				callback: function (pos) {
+				}
+			});
+	}
+
+
+</script>
+</body>
+</html>

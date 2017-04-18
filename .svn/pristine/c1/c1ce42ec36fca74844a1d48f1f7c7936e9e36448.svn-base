@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>底部导航</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/aui-iconfont.ttf"/>
+    <link rel="stylesheet" href="./css/crsCss.css">
+    <style>
+        #header {
+            border: none;
+            background: none;
+        }
+
+        header ul li {
+            text-align: center;
+            display: none;
+            color: white;
+            position: relative;
+            font-size: 18px;
+            border: none;
+            height: 100%;
+            line-height: 58px;
+            background: #b81c25;
+        }
+
+        header ul li.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="wrap" class="flex-wrap flex-vertical">
+    <header id="header" class="home">
+        <ul>
+            <li class="active">
+                <div class="aui-searchbar color-red" id="search">
+                    <div class="aui-searchbar-input aui-border-radius height-search" tapmode onclick="doSearch()">
+                        <form action="javascript:search();">
+                            <input type="search" placeholder="搜故障码、部件、资料等等" readonly id="search-input"
+                                   class="searchlis">
+                        </form>
+
+                    </div>
+                </div>
+            </li>
+            <li class="border-b">修车</li>
+            <li class="border-b">
+                <span id="shopBack" class="aui-iconfont aui-icon-left" style="float: left; display: none;" onclick="back('shop')"></span>
+                <span id="shopTitle"></span>
+            </li>
+            <li class="border-b">
+                <span id="myBack" class="aui-iconfont aui-icon-left" style="float: left; display: none;" onclick="back('my')"></span>
+                <span id="myTitle"></span>
+            </li>
+        </ul>
+    </header>
+    <div id="main" class="flex-con">
+
+    </div>
+
+    <footer class="aui-bar aui-bar-tab" id="footer">
+        <div class="aui-bar-tab-item aui-active" tapmode>
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <i class="aui-iconfont aui-icon-gear"></i>
+            <div class="aui-bar-tab-label">修车</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <!--<div class="aui-badge">99</div>-->
+            <i class="aui-iconfont aui-icon-cart"></i>
+            <div class="aui-bar-tab-label">商城</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <!--<div class="aui-dot"></div>-->
+            <i class="aui-iconfont aui-icon-my"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
+
+    <!--<div id="footer" class="border-t">-->
+    <!--<ul class="flex-wrap">-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active">云API</li>-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">修车</li>-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">商城</li>-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">我的</li>-->
+    <!--</ul>-->
+    <!--</div>-->
+</div>
+</body>
+</html>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/aui/aui-tab.js"></script>
+<script type="text/javascript" src="script/aui/aui-toast.js"></script>
+<script src="script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="script/util.js"></script>
+<script type="text/javascript" src="script/config.js"></script>
+<script type="text/javascript">
+	var tabIndex = 0;
+	var tab = new auiTab({
+		element: $api.byId('footer')
+	}, function (ret) {
+		var choseIndex = ret.index - 1;
+		tabIndex = choseIndex;
+		var eHeaderLis = $api.domAll('header li'),
+			index = 0;
+		for (var i = 0, len = eHeaderLis.length; i < len; i++) {
+			index = ret.index - 1;
+			$api.removeCls(eHeaderLis[i], 'active');
+		}
+		$api.addCls(eHeaderLis[index], 'active');
+
+		api.setFrameGroupIndex({
+			name: 'group',
+			index: choseIndex
+		});
+	});
+
+	function back(frmName) {
+		api.historyBack({
+			frameName: frmName
+		}, function (ret, err) {
+			if (!ret.status) {
+				api.closeWin();
+			}
+		});
+	}
+
+	apiready = function () {
+		//alert(api.connectionType);
+
+        if (api.systemType == 'android') {
+	        var ajpush = api.require('ajpush');
+
+	        ajpush.init(function(ret) {
+		        if (ret && ret.status){
+			        console.log('~~~~~~~~~~~~~~~~~~~~~~~~推送Init')
+		        }
+	        });
+        }
+
+		api.setWinAttr({
+			bounces: false
+		});
+
+		var header = document.querySelector('#header');
+		$api.fixIos7Bar(header);
+
+		api.setStatusBarStyle({
+			style: 'dark',
+			color: '#6ab494'
+		});
+
+		Util.post(Config.api.appCoolie, {deviceInfo: api.deviceId}, function (data) {
+			funIniGroup();
+		});
+
+		api.addEventListener({
+			name: 'isLogin'
+		}, function (ret, err) {
+			localStorage.setItem('isLogin', ret.value.status);
+		});
+
+		api.addEventListener({
+			name: 'pageTitle'
+		}, function (ret, err) {
+			if (tabIndex == 2) {
+				//$api.text(document.getElementById('shopTitle'), ret.value.name);
+			} else if (tabIndex == 3) {
+				if (ret.value.name == '共轨之家|个人中心') {
+					document.getElementById('myBack').style.display = 'none';
+				} else {
+					document.getElementById('myBack').style.display = 'inline';
+				}
+				$api.text(document.getElementById('myTitle'), ret.value.name);
+			}
+		});
+
+		api.addEventListener({
+			name: 'keyback'
+		}, function(ret, err) {
+			if (tabIndex == 2) {
+				back('shop');
+			} else if (tabIndex == 3) {
+				back('my');
+			}
+
+		});
+	};
+
+	function doSearch() {
+		api.openWin({
+			name: 'homeSearch',
+			//url: './html/common/search.html',
+			url: './html/carRep.html',
+			pageParam: {
+				fromHome: true
+			}
+		});
+
+//		api.openWin({
+//			name: 'homeSearch',
+//			url: './html/carRep.html',
+//			pageParam: {
+//				showBack: true
+//            }
+//		});
+	}
+
+	function openCommon(name, title) {
+		api.execScript({
+			name: 'root',
+			script: 'indexOpenCommon("' + name + '","' + title + '")'
+		});
+	}
+
+	var indexOpenCommon = function (name, title) {
+		api.openWin({
+			name: name,
+			url: './html/common/' + name + '.html',
+			pageParam: {
+				name: name,
+				title: title
+			},
+			rect: {
+				x: 0,
+				y: 0,
+				w: 'auto',
+				h: 'auto'
+			}
+		});
+	};
+
+	function funIniGroup() {
+		var eHeaderLis = $api.domAll('header li'),
+			frames = [];
+		for (var i = 0, len = eHeaderLis.length; i < len; i++) {
+			switch (i) {
+				case 0:
+					frames.push({
+						name: 'home',
+						url: './html/home.html',
+						bgColor: '#ededed',
+						bounces: true
+					});
+					break;
+				case 1:
+					frames.push({
+						name: 'carRep',
+						url: './html/carRep.html',
+						bgColor: '#ededed',
+						bounces: true
+					});
+					break;
+				case 2:
+					frames.push({
+						name: 'shop',
+						url: Config.resourcePath.hostApp + 'wxauth/userBuying.htm',
+						//url: './html/shop.html',
+						bgColor: '#ededed',
+						bounces: true
+					});
+					break;
+				case 3:
+					frames.push({
+						name: 'my',
+						url: JSON.parse(localStorage.getItem('isLogin')) ? Config.resourcePath.hostWx + 'v2/member/center' : Config.resourcePath.hostWx + 'v2/login',
+						//url: './html/my.html',
+						bgColor: '#ededed',
+						bounces: true
+					});
+					break;
+			}
+		}
+
+		api.openFrameGroup({
+			name: 'group',
+			scrollEnabled: false,
+			background: '#ededed',
+			rect: {
+				x: 0,
+				y: $api.dom('header').offsetHeight,
+				w: api.winWidth,
+				h: $api.dom('#main').offsetHeight - $api.dom('#header').offsetHeight
+			},
+			index: 0,
+			frames: frames
+		}, function (ret, err) {
+			//alert($api.jsonToStr(ret));
+		});
+	}
+</script>

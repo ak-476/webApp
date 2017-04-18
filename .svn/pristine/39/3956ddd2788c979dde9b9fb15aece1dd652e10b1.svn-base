@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <style>
+
+    </style>
+</head>
+<body>
+<div id="wrap">
+    <!--<header class="aui-bar aui-bar-nav" style="padding-top:25px;">-->
+        <!--<a class="aui-pull-left" onclick="back();">-->
+            <!--<span class="aui-iconfont aui-icon-left"></span>-->
+        <!--</a>-->
+        <!--<div id="title" class="aui-title"></div>-->
+    <!--</header>-->
+
+    <header id="header" class="aui-bar aui-bar-nav" style="background: #d41116;">
+        <a class="aui-pull-left aui-btn" onclick="back();">
+            <span class="aui-iconfont aui-icon-left"></span>返回
+        </a>
+        <div id="title" class="aui-title"></div>
+    </header>
+</div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/util.js"></script>
+<script type="text/javascript">
+	function back() {
+		api.historyBack({
+			frameName: 'baidu'
+		}, function (ret, err) {
+			if (!ret.status) {
+				api.closeWin();
+			}
+		});
+	}
+
+//	var getWebUrl = api.require('getWebUrl');
+//	getWebUrl.addListener(function(ret, err) {
+//		if (ret.url) {
+//			alert(ret.url);
+//			alert(ret.title);
+//		} else {
+//			alert(err.code);
+//		}
+//	});
+
+	apiready = function () {
+		var header = document.querySelector('#header');
+		$api.fixIos7Bar(header);
+
+		api.addEventListener({
+			name: 'pageTitle'
+		}, function(ret, err) {
+			$api.text(document.getElementById('title'), ret.value.name);
+		});
+
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            back();
+        });
+
+        if (api.connectionType == 'none') {
+        	Util.uiShowToast({title: '连接失败，请检查您的网络'});
+        	return;
+        }
+
+//		var browser = api.require('webBrowser');
+//		browser.open({
+//			url: api.pageParam.url
+//		});
+//
+//		return;
+
+		api.openFrame({
+			name: 'baidu',
+			url: api.pageParam.url,
+			bounces: false,
+			rect: {
+				x: 0,
+			    y: $api.dom('header').offsetHeight,
+				//y: 70,
+				w: 'auto',
+				h: 'auto'
+			}
+		});
+	};
+</script>

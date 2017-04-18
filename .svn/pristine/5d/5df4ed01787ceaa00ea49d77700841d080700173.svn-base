@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>修车</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/crsCss.css"/>
+</head>
+<body>
+<div id="app" class="repair">
+    <div class="repairSearch">
+        <div class="searchInput">
+            <span></span>
+            <input type="text" placeholder="搜一搜，问题全解决">
+        </div>
+
+        <div class="repairTable">
+            <ul>
+                <li>搜故障码</li>
+                <li>搜部件</li>
+                <li>搜所有</li>
+                <li>搜部件</li>
+                <li>搜所有</li>
+            </ul>
+        </div>
+
+        <div class="repairSort">
+            <ul>
+                <li>
+                    <img src="./../image/repairing.png" alt="">
+                    <span>资料</span>
+                </li>
+                <li>
+                    <img src="./../image/repairing.png" alt="">
+                    <span>测试数据</span>
+                </li>
+                <li>
+                    <img src="./../image/repairing.png" alt="">
+                    <span>系统部件</span>
+                </li>
+                <li>
+                    <img src="./../image/repairing.png" alt="">
+                    <span>故障代码</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="answerGet">
+        <a>
+            <span>在线问答</span>
+            <span class="newAnswer" v-if="countQaNoRead > 0">有新的回答</span>
+            <span class="getNum">{{countQaNoRead}}</span>
+        </a>
+    </div>
+
+    <div class="faultFind">
+        <a>故障排查</a>
+    </div>
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/vue.min.js"></script>
+<script type="text/javascript" src="../script/aui/aui-toast.js"></script>
+<script type="text/javascript" src="../script/util.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data:{
+            countQaNoRead: 0
+        },
+        methods:{
+            init: function(){
+                var that = this;
+                Util.post('http://192.168.11.58:9999/api/app/countQaNoRead.json',{}, function(data) {
+                    that.countQaNoRead = data.data;
+                })
+            }
+        }
+    })
+
+    apiready = function(){
+        vm.init();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widget id="A6932043542594" version="0.0.1">
+    <name>gonggui</name>
+    <description></description>
+    <author email="1990218899@qq.com" href="http://www.apicloud.com">过来看看U</author>
+    <content src="index.html"/>
+    <preference name="appBackground" value="rgba(0,0,0,0)"/>
+    <preference name="windowBackground" value="rgba(0,0,0,0)"/>
+    <preference name="frameBackgroundColor" value="rgba(0,0,0,0)"/>
+    <preference name="autoLaunch" value="true"/>
+    <preference name="autoUpdate" value="true"/>
+    <preference name="smartUpdate" value="false"/>
+    <preference name="debug" value="true"/>
+    <preference name="statusBarAppearance" value="false"/>
+    <permission name="location"/>
+    <permission name="internet"/>
+    <preference name="userAgent" value="APICloud" />
+    <preference name="softInputMode" value="resize"/>
+    <!--<preference name="customRefreshHeader" value="UIPullRefresh"/>-->
+    <access origin="*"/>
+
+    <feature name="wxPay">
+        <param name="urlScheme" value="wxbcda9d2f2d51ccb5"/>
+        <param name="apiKey" value="wxbcda9d2f2d51ccb5"/>
+        <param name="apiSecret" value="23f8ee8812b12ff0b27c6cb77770e023"/>
+    </feature>
+
+    <feature name="ajpush">
+        <param name="app_key" value="6ef7696d61f7c83438b43519" />
+        <param name="channel" value="APICloud" />
+    </feature>
+</widget>

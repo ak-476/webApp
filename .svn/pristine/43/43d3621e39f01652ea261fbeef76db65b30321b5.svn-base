@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<security>
+    <item name="wxPay_appId" value="wx290208622076c4e6"/>
+    <item name="wxPay_mchId" value="1329725301"/>
+    <item name="wxPay_partnerKey" value="xingzexinxiCommonRail1Q2W3E4R5T6"/>
+    <item name="wxPay_notifyUrl" value="http://test.51gonggui.com/commonrail/wxpay/notify.htm"/>
+</security>

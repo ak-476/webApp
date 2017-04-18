@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>修车</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/crsCss.css"/>
+
+    <style>
+        .close{
+            position: absolute; right: 0; bottom: 2px;
+            display: inline-block; width: 32px; height: 32px;
+            background: url(../image/search_delete.png) no-repeat;
+            -webkit-background-size: contain;
+            background-size: contain;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="repair">
+    <div class="repairSearch">
+        <div class="searchInput">
+            <span></span>
+            <input id="keywordInp" v-model="keyword" type="text" placeholder="搜一搜，问题全解决">
+            <i class="close" tapmode @click="api.closeWin()"></i>
+        </div>
+
+        <div class="repairTable">
+            <ul>
+                <li  @click="fault()">搜故障码</li>
+                <li  @click="paseInfo()">搜部件</li>
+                <li  @click="soso()">搜所有</li>
+            </ul>
+        </div>
+
+        <div class="repairSort">
+            <ul>
+                <li @click="datum()">
+                    <img src="./../image/repairing1.png" alt="">
+                    <span>资料</span>
+                </li>
+                <li @click="universals()">
+                    <img src="./../image/repairing2.png" alt="">
+                    <span>测试数据</span>
+                </li>
+                <li @click="partsInfoes()">
+                    <img src="./../image/repairing3.png" alt="">
+                    <span>系统部件</span>
+                </li>
+                <li @click="faultCodes()">
+                    <img src="./../image/repairing4.png" alt="">
+                    <span>故障代码</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div v-if="!fromHome" class="answerGet">
+        <a @click="online()">
+            <span>在线问答</span>
+            <span class="newAnswer" v-if="countQaNoRead > 0">有新的回答</span>
+            <span class="getNum">{{ countQaNoRead || 0 }}</span>
+        </a>
+    </div>
+
+    <div v-if="!fromHome" class="faultFind" @click="faultFind()">
+        <a>故障排查</a>
+    </div>
+</div>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/lib/vue.min.js"></script>
+<script type="text/javascript" src="../script/aui/aui-toast.js"></script>
+<script src="../script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="../script/config.js"></script>
+<script type="text/javascript" src="../script/util.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data:{
+            countQaNoRead: 0,
+            keyword: '',
+            sessionId: localStorage.getItem('sessionId'),
+            fromHome: false
+        },
+        methods:{
+            init: function(){
+                var that = this;
+                that.fromHome = api.pageParam.fromHome;
+                Util.post(Config.api.appGanoread, {}, function(data) {
+                    that.countQaNoRead = data.data || 0;
+                })
+            },
+            fault: function(option){
+                if(!option){
+                    if(!this.keyword){
+                        Util.auiShowMsgBox({
+                            msg: '搜索内容不能为空'
+                        });
+                        return;
+                    }
+                }
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/faultCode/list?keyword=' + this.keyword
+                    }
+                })
+
+//                api.openWin({
+//                    name: 'faultCode',
+//                    url: HOSTWX + 'v2/faultCode/list?keyword=' + this.keyword,
+//                    pageParam: {
+//                        name: 'faultCode'
+//                    }
+//                });
+            },
+            paseInfo: function(){
+                if(!this.keyword){
+                    Util.auiShowMsgBox({
+                        msg: '搜索内容不能为空'
+                    });
+                    return;
+                }
+
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/partsInfo/index',
+                    }
+                })
+//                api.openWin({
+//                    name: 'faultCode',
+//                    url: HOSTWX + 'v2/partsInfo/index',
+//                    pageParam: {
+//                        name: 'faultCode'
+//                    }
+//                });
+            },
+            soso: function(){
+                if(!this.keyword){
+                    Util.auiShowMsgBox({
+                        msg: '搜索内容不能为空'
+                    });
+                    return;
+                }
+
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/universalSoso/searchList?keyword=' + this.keyword,
+                    }
+                })
+
+//                api.openWin({
+//                    name: 'faultCode',
+//                    url: HOSTWX + 'v2/universalSoso/searchList?keyword=' + this.keyword,
+//                    pageParam: {
+//                        name: 'faultCode'
+//                    }
+//                });
+
+            },
+            datum: function () {
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/datum'
+                    }
+                })
+
+//                api.openWin({
+//                    name: 'faultCode',
+//                    url: HOSTWX + 'v2/datum',
+//                    pageParam: {
+//                        name: 'faultCode'
+//                    }
+//                });
+            },
+            universals: function () {
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/soso/testDataQuery'
+                    }
+                })
+            },
+            partsInfoes: function () {
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/partsInfo/index',
+                    }
+                })
+
+//                api.openWin({
+//                    name: 'faultCode',
+//                    url: HOSTWX + 'v2/partsInfo/index',
+//                    pageParam: {
+//                        name: 'faultCode'
+//                    }
+//                });
+            },
+            faultCodes: function () {
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + 'v2/faultCode/index',
+                    }
+                })
+
+
+//                api.openWin({
+//                    name: 'faultCode',
+//                    url: HOSTWX + 'v2/faultCode/index',
+//                    pageParam: {
+//                        name: 'faultCode'
+//                    }
+//                });
+            },
+            online: function () {
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostApp + 'wxauth/onlineQA.htm?status=5',
+                    }
+                })
+
+
+//                api.openWin({
+//                    name: 'online',
+//                    url: HOSTAPP + 'wxauth/onlineQA.htm?status=5',
+//                    pageParam: {
+//                        name: 'online'
+//                    }
+//                });
+            },
+            faultFind: function () {
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostApp + 'wxauth/commonRailForumList.htm?termId=81',
+                    }
+                })
+
+//                api.openWin({
+//                    name: 'faultFind',
+//                    url: HOSTAPP + 'wxauth/commonRailForumList.htm?termId=81',
+//                    pageParam: {
+//                        name: 'faultFind'
+//                    }
+//                });
+            }
+
+
+        },
+    })
+
+    apiready = function() {
+    	if (api.pageParam.fromHome) {
+		    console.log('carRep .............................');
+		    $api.byId('keywordInp').focus();
+        }
+        vm.init();
+    }
+</script>
+</body>
+</html>

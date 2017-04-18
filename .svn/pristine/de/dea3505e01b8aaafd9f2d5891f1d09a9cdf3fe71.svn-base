@@ -1,0 +1,29 @@
+const HOSTAPP =  'http://192.168.11.58/';
+
+// 登录页短信发送
+const APPLOGIN = HOSTAPP + 'app/sendMsgForApp.json';
+
+//验证码并登录
+const  APPMSGLOGIN = HOSTAPP + 'app/checkLoginForApp.json';
+
+// 用户退出登录
+const APPLOGOUT = HOSTAPP + 'api/app/logout.json';
+
+//首页分类
+const  APPQUICKCLASSFYLIST = HOSTAPP + 'app/quickClassifyList.json';
+
+//首页翻页列表
+const  APPPAGELIST = HOSTAPP + 'app/fmsList.json';
+
+// 在线问答未读数量
+const  APPQANOREAD = HOSTAPP + 'api/app/countQaNoRead.json';
+
+
+var apiJson = {
+    'APPLOGIN': HOSTAPP + 'app/sendMsgForApp.json',
+    'APPMSGLOGIN': HOSTAPP + 'app/checkLoginForApp.json',
+    'APPLOGOUT': HOSTAPP + 'api/app/logout.json',
+    'APPQUICKCLASSFYLIST': HOSTAPP + 'app/quickClassifyList.json',
+    'APPPAGELIST': HOSTAPP + 'app/fmsList.json',
+    'APPQANOREAD': HOSTAPP + 'api/app/countQaNoRead.json'
+}

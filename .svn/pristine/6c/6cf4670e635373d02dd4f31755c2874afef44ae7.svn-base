@@ -1,0 +1,59 @@
+var Util = (function () {
+	var obj = function () {};
+	obj.prototype = {
+		post: function (url, params, successCallback, errorCallback) {
+			api.ajax({
+				url: url,
+				method: 'post',
+				data: {
+					body: params
+				},
+				headers: {
+					"Content-type" : "application/json;charset=UTF-8"
+				}
+			}, function (ret, err) {
+				console.log('============请求:' + url + '============');
+				console.log('============参数:' + JSON.stringify(params) + '============');
+				if (ret) {
+					console.log('============SUCCESS:' + JSON.stringify(ret) + '============');
+					successCallback && successCallback(ret);
+				} else {
+					console.log('============ERROR:' + JSON.stringify(err) + '============');
+					errorCallback && errorCallback();
+				}
+			});
+		}
+	};
+
+	return new obj();
+})();
+
+//
+// (function(window){
+// 	var u = {};
+// 	u.post = function (url, params, successCallback, errorCallback) {
+// 		api.ajax({
+// 			url: url,
+// 			method: 'post',
+// 			data: {
+// 				body: params
+// 			},
+// 			headers: {
+// 				"Content-type" : "application/json;charset=UTF-8"
+// 			}
+// 		}, function (ret, err) {
+// 			console.log('============请求:' + url + '============');
+// 			console.log('============参数:' + JSON.stringify(params) + '============');
+// 			if (ret) {
+// 				console.log('============SUCCESS:' + JSON.stringify(ret) + '============');
+// 				successCallback && successCallback(ret);
+// 			} else {
+// 				console.log('============ERROR:' + JSON.stringify(err) + '============');
+// 				errorCallback && errorCallback();
+// 			}
+// 		});
+// 	};
+// 	window.Util = u;
+// })(window);
+
+

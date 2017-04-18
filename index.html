@@ -1,0 +1,426 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>底部导航</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/common.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="./css/aui-iconfont.ttf"/>
+    <link rel="stylesheet" href="./css/crsCss.css">
+    <style>
+        #header {
+            border: none;
+            background: none;
+        }
+
+        header ul li {
+            text-align: center;
+            display: none;
+            color: white;
+            position: relative;
+            font-size: 18px;
+            border: none;
+            height: 100%;
+            line-height: 58px;
+            background: #b81c25;
+        }
+
+        header ul li.active {
+            display: block;
+        }
+    </style>
+
+    <script>
+		window.onerror = function (message, url, lineNo, colNo, error) {
+			var userAgent = navigator.userAgent;
+			var content = message + '<---->' + error.stack.toString();
+			//alert(message);
+			alert(message + '<--error-->' + content.toString());
+		};
+    </script>
+</head>
+<body>
+<div id="wrap" class="flex-wrap flex-vertical">
+    <header id="header" class="home">
+        <ul>
+            <li class="active">
+                <div class="aui-searchbar color-red" id="search">
+                    <div class="aui-searchbar-input aui-border-radius height-search" tapmode onclick="doSearch()">
+                        <form action="javascript:search();">
+                            <input type="search" placeholder="搜故障码、部件、资料等等" readonly id="search-input"
+                                   class="searchlis">
+                        </form>
+
+                    </div>
+                </div>
+            </li>
+            <li class="border-b">修车</li>
+            <li class="border-b">
+                <span id="shopBack" class="aui-iconfont aui-icon-left" style="float: left; display: none;" onclick="back('shop')"></span>
+                <span id="shopTitle"></span>
+            </li>
+            <li class="border-b">
+                <!--<a class="aui-pull-left aui-btn">-->
+                    <!--<span class="aui-iconfont aui-icon-left"></span>返回-->
+                <!--</a>-->
+                <!--<div class="aui-title">Title</div>-->
+                <span id="myBack" class="aui-iconfont aui-icon-left" style="float: left; display: none;" onclick="back('my')"></span>
+                <span id="myTitle"></span>
+            </li>
+        </ul>
+    </header>
+    <div id="main" class="flex-con">
+
+    </div>
+
+    <footer class="aui-bar aui-bar-tab" id="footer">
+        <div class="aui-bar-tab-item aui-active" tapmode>
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <i class="aui-iconfont aui-icon-gear"></i>
+            <div class="aui-bar-tab-label">修车</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <!--<div class="aui-badge">99</div>-->
+            <i class="aui-iconfont aui-icon-cart"></i>
+            <div class="aui-bar-tab-label">商城</div>
+        </div>
+        <div class="aui-bar-tab-item" tapmode>
+            <!--<div class="aui-dot"></div>-->
+            <i class="aui-iconfont aui-icon-my"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
+
+    <!--<div id="footer" class="border-t">-->
+    <!--<ul class="flex-wrap">-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active">云API</li>-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">修车</li>-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">商城</li>-->
+    <!--<li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con">我的</li>-->
+    <!--</ul>-->
+    <!--</div>-->
+</div>
+</body>
+</html>
+<script type="text/javascript" src="script/api.js"></script>
+<script type="text/javascript" src="script/aui/aui-tab.js"></script>
+<script type="text/javascript" src="script/aui/aui-toast.js"></script>
+<script src="script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="script/util.js"></script>
+<script type="text/javascript" src="script/config.js"></script>
+<script type="text/javascript">
+	var tabIndex = 0;
+	var tab = new auiTab({
+		element: $api.byId('footer')
+	}, function (ret) {
+		var choseIndex = ret.index - 1;
+		var isReload = false;
+
+		Util.apiCheckConection(function () {
+			tabIndex = choseIndex;
+			var eHeaderLis = $api.domAll('header li'),
+				index = 0;
+			for (var i = 0, len = eHeaderLis.length; i < len; i++) {
+				index = ret.index - 1;
+				$api.removeCls(eHeaderLis[i], 'active');
+			}
+			$api.addCls(eHeaderLis[index], 'active');
+
+//		if (choseIndex > 1 && !JSON.parse(localStorage.getItem('isloginTemp'))) {
+//			isReload = true;
+//			localStorage.setItem('isLoginTemp', true);
+//        }
+
+			api.setFrameGroupIndex({
+				name: 'group',
+				index: choseIndex,
+				reload: isReload
+			});
+
+			if (tabIndex > 1) {
+				if (ret.index > 1) {
+					api.setFrameClient({
+						frameName: tabIndex == 2 ? 'shop' : 'my'
+					}, function (ret, err) {
+						switch (ret.state) {
+							case 0:
+								break;
+							case 1:
+								break;
+							case 2:
+								Util.getExternalPageTitle(tabIndex == 2 ? 'shop' : 'my');
+								break;
+							case 3:
+								console.log('title change: ' + ret.title);
+								setTitleBack(tabIndex, ret.title);
+								break;
+							case 4:
+								break;
+							default:
+								break;
+						}
+					});
+				}
+
+			}
+        });
+	});
+
+	function back(frmName) {
+		Util.historyBack({frameName: frmName});
+	}
+
+	function setTitleBack(tabIndex, title) {
+		if (tabIndex == 2) {
+			if (title == '共轨之家|团购联盟') {
+				document.getElementById('shopBack').style.display = 'none';
+			} else {
+				document.getElementById('shopBack').style.display = 'inline';
+			}
+		} else if (tabIndex == 3) {
+			if (title == '个人中心' || title == '登录') {
+				document.getElementById('myBack').style.display = 'none';
+			} else {
+				document.getElementById('myBack').style.display = 'inline';
+			}
+		}
+		$api.text(document.getElementById(tabIndex == 2 ? 'shopTitle' : 'myTitle'), title);
+    }
+
+	//统计-app恢复
+	function onResume(){
+		ajpush.onResume();
+		console.log('JPush onResume');
+	}
+
+	//统计-app暂停
+	function onPause(){
+		ajpush.onPause();
+		console.log('JPush onPause');
+	}
+
+	var ajpush = null;
+	apiready = function () {
+//		if (Config.resourcePath.hostWx.indexOf('test') != -1) {
+//			ajpush = api.require('ajpush');
+//
+//			ajpush.init(function(ret) {
+//				if (ret && ret.status){
+//					console.log('~~~~~~~~~~~~~~~~~~~~~~~~推送Init')
+//				}
+//			});
+//
+//			Util.apiAddListener({name: 'appintent'}, function (ret) {
+//				if (ret && ret.appParam.ajpush) {
+//					if(ret && ret.appParam.ajpush){
+//						var ajpush = ret.appParam.ajpush;
+//						var id = ajpush.id;
+//						var title = ajpush.title;
+//						var content = ajpush.content;
+//						var extra = JSON.parse(ajpush.extra);
+//
+//						if (extra && extra.url && extra.url.indexOf('http:') != -1) {
+//							api.openWin({
+//								name: 'externalPage',
+//								url: './html/common/externalPage.html',
+//								pageParam: {
+//									file: 'table',
+//									id: 1,
+//									title: '你好',
+//									url: extra.url.replace('\\', '')
+//								}
+//							})
+//						}
+//					}
+//                }
+//            });
+//
+//			Util.apiAddListener({name: 'noticeclicked'}, function (ret) {
+//				if(ret && ret.value){
+//					var ajpush = ret.value;
+//					var content = ajpush.content;
+//					var extra = ajpush.extra;
+//
+//					if (extra && extra.url && extra.url.indexOf('http:') != -1) {
+//						api.openWin({
+//							name: 'externalPage',
+//							url: './html/common/externalPage.html',
+//							pageParam: {
+//								file: 'table',
+//								id: 1,
+//								title: '你好',
+//								url: extra.url.replace('\\', '')
+//							}
+//						})
+//					}
+//				}
+//            });
+//
+//			Util.apiAddListener({name: 'pause'}, function () {
+//				onPause();//监听应用进入后台，通知jpush暂停事件
+//            });
+//
+//			Util.apiAddListener({name: 'resume'}, function () {
+//				onResume();//监听应用恢复到前台，通知jpush恢复事件
+//			});
+//
+//			ajpush.setListener(
+//				function(ret) {
+//					var id = ret.id;
+//					var title = ret.title;
+//					var content = ret.content;
+//					var extra = ret.extra;
+//				}
+//			);
+//        }
+
+		api.setWinAttr({
+			bounces: false
+		});
+
+		var header = document.querySelector('#header');
+		$api.fixIos7Bar(header);
+
+		api.setStatusBarStyle({
+			style: 'dark',
+			color: '#6ab494'
+		});
+
+		Util.post(Config.api.appCoolie, {deviceInfo: api.deviceId}, function (data) {
+			funIniGroup();
+		});
+
+		Util.apiAddListener({name: 'isLogin'}, function (ret) {
+			if (ret && ret.value) {
+				localStorage.setItem('isLogin', ret.value.status);
+            }
+        });
+
+		Util.apiAddListener({name: 'keyback'}, function (ret) {
+			back(tabIndex == 2 ? 'shop' : 'my');
+        });
+
+		Util.apiAddListener({name: 'getUrl'}, function (ret) {
+			if (ret.value && ret.value.title) {
+				setTitleBack(tabIndex, ret.value.title);
+			}
+		});
+	};
+
+	function doSearch() {
+		api.openWin({
+			name: 'homeSearch',
+			//url: './html/common/search.html',
+			url: './html/carRep.html',
+			pageParam: {
+				fromHome: true
+			}
+		});
+	}
+
+	function openCommon(name, title) {
+		api.execScript({
+			name: 'root',
+			script: 'indexOpenCommon("' + name + '","' + title + '")'
+		});
+	}
+
+	var indexOpenCommon = function (name, title) {
+		api.openWin({
+			name: name,
+			url: './html/common/' + name + '.html',
+			pageParam: {
+				name: name,
+				title: title
+			},
+			rect: {
+				x: 0,
+				y: 0,
+				w: 'auto',
+				h: 'auto'
+			}
+		});
+	};
+
+	function funIniGroup() {
+		var eHeaderLis = $api.domAll('header li'),
+			frames = [];
+		for (var i = 0, len = eHeaderLis.length; i < len; i++) {
+			switch (i) {
+				case 0:
+					frames.push({
+						name: 'home',
+						url: './html/home.html',
+						bgColor: '#ededed',
+						bounces: true
+					});
+					break;
+				case 1:
+					frames.push({
+						name: 'carRep',
+						url: './html/carRep.html',
+						bgColor: '#ededed',
+						bounces: true
+					});
+					break;
+				case 2:
+					frames.push({
+						name: 'shop',
+						url: Config.resourcePath.hostApp + 'wxauth/userBuying.htm',
+//						url: './html/shop.html',
+						bgColor: '#ededed',
+						bounces: true,
+						progress: {
+							type: 'page'
+						}
+					});
+					break;
+				case 3:
+					frames.push({
+						name: 'my',
+//						url: JSON.parse(localStorage.getItem('isLogin')) ? Config.resourcePath.hostWx + 'v2/member/center' : Config.resourcePath.hostWx + 'v2/login',
+						url: Config.resourcePath.hostWx + 'v2/member/center',
+						//url: './html/my.html',
+						bgColor: '#ededed',
+						bounces: true,
+						progress: {
+							type: 'page'
+						}
+					});
+					break;
+			}
+		}
+
+		api.openFrameGroup({
+			name: 'group',
+			scrollEnabled: false,
+			background: '#ededed',
+			rect: {
+				x: 0,
+				y: $api.dom('header').offsetHeight,
+				w: api.winWidth,
+				h: $api.dom('#main').offsetHeight - $api.dom('#header').offsetHeight
+			},
+			index: 0,
+			preload: 0,
+			frames: frames
+		}, function (ret, err) {
+			console.log($api.jsonToStr(ret));
+			if (ret.index == 1){
+				api.execScript({
+//					name: 'group',
+					frameName: 'carRep',
+					script: 'vm.init();'
+				});
+            }
+		});
+	}
+</script>

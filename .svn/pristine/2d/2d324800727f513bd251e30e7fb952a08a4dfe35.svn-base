@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>蜻蜓FM</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css"/>
+    <link rel="stylesheet" type="text/css" href="../../css/crsCss.css" />
+	<style>
+		header{
+            height: 56px; line-height: 56px;
+            background-color: #b81c25;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+        }
+        .inputbox{
+            position: relative;
+            margin: 10px 0 10px 10px;
+            background:white;
+            -webkit-background-size: contain;
+            background-size: contain;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            line-height: 36px;
+            border-radius: 5px;
+        }
+        .back{
+            display:inline-block; width: 40px; height: 100%;
+            background:url(../../image/search_back.png) no-repeat left center;
+            -webkit-background-size: contain;
+            background-size: contain;
+        }
+        .search{
+            font-size: 14px; color: #fff;
+            display: inline-block;
+            padding: 0 10px;
+        }
+        .inputbox input{
+            background: url(../../image/search_zoom.png) no-repeat 7px center;
+            -webkit-background-size: 18px;
+            background-size: 18px;
+            font-size: 14px; outline: none;
+            padding: 0 30px;
+            width: 100%;
+        }
+        .inputbox .close{
+            position: absolute; right: 0; bottom: 2px;
+            display: inline-block; width: 32px; height: 32px;
+            background: url(../../image/search_delete.png) no-repeat;
+            -webkit-background-size: contain;
+            background-size: contain;
+        }
+        #recent{
+            background-color: #eaeaea; overflow: hidden;
+            border-bottom: 1px solid #ddd;
+        }
+        #recent span, #recent em{
+            display: inline-block; padding: 10px 20px;
+            font-size: 12px; color: #565656;
+        }
+        #recent em{
+            float: right; 
+        }
+        #recent em:before{
+            display: inline-block; content: '';
+            margin-right: 4px;
+            width: 16px; height: 16px; vertical-align: bottom;
+            background: url(../../image/search_trash.png) no-repeat;
+            -webkit-background-size: contain;
+            background-size: contain;
+        }
+	</style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <div class="inputbox">
+                <input type="text" v-model="keyword" placeholder="搜故障码、部件、资料等等" />
+                <i class="close" tapmode onclick="del()"></i>
+            </div>
+            <span class="search" tapmode onclick="api.closeWin()">取消</span>
+        </header>
+
+        <div class="searchBtn">
+            <button @click="fault()">搜故障码</button>
+            <button @click="parseInfo()">搜部件</button>
+            <button @click="soso()">搜所有</button>
+        </div>
+        <div class="h10"></div>
+
+        <div class="assignBtn">
+            <p>搜索指定内容</p>
+            <ul>
+                <li @click="fault()">搜故障码</li>
+                <li @click="fault()">搜故障码</li>
+                <li @click="fault()">搜故障码</li>
+                <li @click="fault()">搜故障码</li>
+                <li @click="fault()">搜故障码</li>
+                <li @click="fault()">搜故障码</li>
+
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./../../script/api.js"></script>
+<script type="text/javascript" src="./../../script/lib/vue.min.js"></script>
+<script type="text/javascript" src="./../../script/aui/aui-toast.js"></script>
+<script type="text/javascript" src="./../../script/aui/aui-scroll.js"></script>
+<script src="../../script/aui/aui-dialog.js"></script>
+<script type="text/javascript" src="./../../config.js"></script>
+<script type="text/javascript" src="./../../script/util.js"></script>
+<script type="text/javascript">
+    function del() {
+        var input = document.querySelector('.inputbox input');
+        input.value = '';
+    }
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            keyword: ''
+        },
+        methods: {
+            fault: function(){
+                if(!this.keyword){
+                    Util.auiShowMsgBox({
+                        msg: '搜索内容不能为空'
+                    });
+                    return;
+                }
+
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + '/v2/faultCode/list?keyword=' + this.keyword,
+                    }
+                })
+
+            },
+            parseInfo: function(){
+                if(!this.keyword){
+                    Util.auiShowMsgBox({
+                        msg: '搜索内容不能为空'
+                    });
+                    return;
+                }
+
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + '/v2/partsInfo/index',
+                    }
+                })
+            },
+            soso: function(){
+                if(!this.keyword){
+                    Util.auiShowMsgBox({
+                        msg: '搜索内容不能为空'
+                    });
+                    return;
+                }
+
+                api.openWin({
+                    name: 'externalPage',
+                    url: './common/header.html',
+                    pageParam: {
+                        file: 'table',
+                        id: 1,
+                        title: '你好',
+                        url: Config.resourcePath.hostWx + '/v2/universalSoso/searchList?keyword=' + this.keyword,
+                    }
+                })
+
+            }
+        }
+
+    });
+
+    apiready = function(){
+    	console.log($api.jsonToStr(api.pageParam));
+
+		var header = document.querySelector('header');
+        $api.fixIos7Bar(header);
+
+//        var recent = document.querySelector('#recent');
+//        var headerPos = $api.offset(recent);
+//        api.openFrame({
+//            name: 'frm_search_res',
+//            url: 'frm_search_res.html',
+//            rect: {
+//                x: 0,
+//                y: headerPos.t + headerPos.h,
+//                w: 'auto',
+//                h: 'auto'
+//            }
+//        });
+    };
+</script>
+</html>

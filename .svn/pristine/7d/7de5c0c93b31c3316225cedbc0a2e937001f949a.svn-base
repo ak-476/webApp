@@ -1,0 +1,46 @@
+const HOSTAPP =  'http://192.168.11.9/commonrail/';
+
+const HOSTWX = 'http://192.168.11.86:9999'
+
+// // 登录页短信发送
+// const APPLOGIN = HOSTAPP + 'app/sendMsgForApp.json';
+//
+// //验证码并登录
+// const  APPMSGLOGIN = HOSTAPP + 'app/checkLoginForApp.json';
+//
+// // 用户退出登录
+// const APPLOGOUT = HOSTAPP + 'api/app/logout.json';
+//
+// //首页分类
+// const  APPQUICKCLASSFYLIST = HOSTAPP + 'app/quickClassifyList.json';
+//
+// //首页翻页列表
+// const  APPPAGELIST = HOSTAPP + 'app/fmsList.json';
+//
+// // 在线问答未读数量
+// const  APPQANOREAD = HOSTAPP + 'api/app/countQaNoRead.json';
+
+
+var apiJson = {
+    //页面初始化cookies
+    'APPCOOKIE': HOSTAPP + 'app/setCookie.json',
+    // 登录页短信发送
+    'APPLOGIN': HOSTAPP + 'app/sendMsgForApp.json',
+    //验证码并登录
+    'APPMSGLOGIN': HOSTAPP + 'app/checkLoginForApp.json',
+    // 用户退出登录
+    'APPLOGOUT': HOSTAPP + 'api/app/logout.json',
+    //首页分类
+    'APPQUICKCLASSFYLIST': HOSTAPP + 'app/quickClassifyList.json',
+    //首页翻页列表
+    'APPPAGELIST': HOSTAPP + 'app/fmsList.json',
+    // 在线问答未读数量
+    'APPQANOREAD': HOSTAPP + 'api/app/countQaNoRead.json',
+
+
+
+
+
+    // 故障码查询
+    'WXFALTCODE': HOSTWX + 'api/faltCode/searchPage.json'
+}
